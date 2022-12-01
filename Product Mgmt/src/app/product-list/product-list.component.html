@@ -1,0 +1,85 @@
+<nav class="navbar navbar-dark bg-primary mt-2">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">{{getTitle()}} {{message}}</span>
+    
+        <form class="d-flex">
+            <!-- Two-way Data Binding - [(..)] (Banana in a Box)-->
+            <input name="txtListFilter" class="form-control me-2" type="text" placeholder="Filter" 
+            [(ngModel)]="listFilter">
+        </form>
+
+    </div>
+</nav>
+
+
+<div class="card mt-3">
+    <div class="card-body">
+        Filtering by: {{listFilter}}
+    </div>
+</div>
+
+<div class="mt-3">
+    <!-- Event Binding - (..) -->
+    <button class="btn btn-primary" (click)="toggleImages()">{{areImagesVisible == true ? "Hide" : "Show"}} Images</button>
+</div>
+
+<!-- <div class="table-responsive mt-3" *ngIf="filteredProducts != null && filteredProducts.length > 0"> -->
+<div class="table-responsive mt-3" *ngIf="filteredProducts?.length">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Image</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Unit Price</th>
+                <th>Release Date</th>
+                <th>Star Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of filteredProducts">
+
+                <!-- Property Binding - [..] -->
+                <td><img *ngIf="areImagesVisible == true" [src]="product.imageUrl" 
+                    [title]="product.name | uppercase"
+                    [style.width.px]="imageWidth"
+                    [style.margin.px]="imageMargin"/>
+                </td>
+                
+                <!-- Pipes -->
+                <td>{{product.code | lowercase | convertToSpaces: '-'}}</td>
+                <td>{{product.name | uppercase}}</td>
+
+                <!-- Currency Pipe: https://angular.io/api/common/CurrencyPipe 
+                Date Pipe: https://angular.io/api/common/DatePipe -->
+                <td>{{product.price | currency: 'EUR' : 'symbol' : '1.2-2'}}</td>
+                <td>{{product.releaseDate | date: 'mediumDate'}}</td>
+                <td><app-star-rating [rating]="product.starRating" (notify)="onNotify($event)"></app-star-rating></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Interpolation of attributes
+Interpolation works with string data! -->
+
+<!-- <div class="mt-5">
+    <p>{{'Welcome to ' + 'Angular data binding.'}}</p>
+    <p>{{100*80}}</p>
+    <p style.color="{{colour}}">This is coloured</p>
+</div> -->
+
+
+
+<!-- Property Binding -->
+
+<!-- <div class="mt-5">
+    <p [innerText]="title"></p>    
+    <p [innerText]="getTitle()"></p>
+    <p [innerText]="'Hello and welcome to ' + 'Angular data binding!'"></p>
+    <p [style.color]="colour">This is coloured</p>
+</div> -->
+
+<!-- <div class="mt-5">
+    <p>This is a p tag in product-list and should be coloured green</p>
+</div> -->
